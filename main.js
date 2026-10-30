@@ -28,3 +28,16 @@ const kernel=document.querySelector('.kernel-grid');
 for(let i=0;i<48;i++)kernel.append(document.createElement('i'));
 document.querySelector('#year').textContent=new Date().getFullYear();
 
+
+// Allow CV links to open a paper inside the website's document reader.
+const linkedPaper = new URL(window.location.href).searchParams.get('paper');
+if (['trace', 'monitor', 'fairness'].includes(linkedPaper)) {
+  reader.open(linkedPaper);
+}
+// Closing the reader returns to an ordinary, shareable website URL.
+document.addEventListener('readerclose', () => {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('paper')) return;
+  url.searchParams.delete('paper');
+  window.history.replaceState(window.history.state, '', url);
+});
